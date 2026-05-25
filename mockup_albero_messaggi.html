@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="it">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Mockup Albero Messaggi</title>
+
+        <style>
+            :root {
+                --bg: #f5f7fb;
+                --panel: #ffffff;
+                --text: #1f2937;
+                --muted: #6b7280;
+                --line: #d1d5db;
+                --primary: #2563eb;
+                --primary-soft: #dbeafe;
+                --green: #16a34a;
+                --orange: #f97316;
+                --red: #dc2626;
+                --radius: 12px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+                background: var(--bg);
+                color: var(--text);
+            }
+
+            .page {
+                max-width: 1600px;
+                margin: 0 auto;
+                padding: 24px;
+            }
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 16px;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                margin: 0 0 6px;
+                font-size: 28px;
+            }
+
+            .header p {
+                margin: 0;
+                color: var(--muted);
+            }
+
+            .toolbar {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                background: var(--panel);
+                border: 1px solid #e5e7eb;
+                border-radius: var(--radius);
+                padding: 14px;
+                margin-bottom: 20px;
+                box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            }
+
+            .filter {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .filter label {
+                font-size: 12px;
+                color: var(--muted);
+                font-weight: bold;
+            }
+
+            .filter input,
+            .filter select {
+                height: 36px;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                padding: 0 10px;
+                min-width: 170px;
+                background: white;
+            }
+
+            .search-button {
+                padding-top: 18px;
+                padding-left: 10px;
+            }
+
+            .button {
+                align-self: flex-end;
+                height: 36px;
+                border: none;
+                border-radius: 8px;
+                padding: 0 14px;
+                background: var(--primary);
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .layout {
+                display: grid;
+                grid-template-columns: minmax(33.3333vw, 0.8fr) 1.2fr;
+                gap: 20px;
+            }
+
+            #messages-tree {
+                min-width: 33.3333vw;
+            }
+
+            .card {
+                background: var(--panel);
+                border: 1px solid #e5e7eb;
+                border-radius: var(--radius);
+                padding: 18px;
+                box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            }
+
+            .card-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 14px;
+            }
+
+            .card-title h2 {
+                margin: 0;
+                font-size: 18px;
+            }
+
+            .counter {
+                font-size: 13px;
+                color: var(--muted);
+                background: #f3f4f6;
+                padding: 5px 9px;
+                border-radius: 999px;
+            }
+
+            .tree {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .tree ul {
+                list-style: none;
+                margin: 0;
+                padding-left: 28px;
+                position: relative;
+            }
+
+            .tree ul::before {
+                content: "";
+                position: absolute;
+                left: 12px;
+                top: 0;
+                bottom: 12px;
+                width: 1px;
+                background: var(--line);
+            }
+
+            .tree li {
+                position: relative;
+                margin: 10px 0;
+            }
+
+            .tree ul li::before {
+                content: "";
+                position: absolute;
+                left: -16px;
+                top: 24px;
+                width: 16px;
+                height: 1px;
+                background: var(--line);
+            }
+
+            .message-node {
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                border: 1px solid #e5e7eb;
+                border-radius: 10px;
+                background: #fff;
+                transition:
+                    border 0.15s ease,
+                    transform 0.15s ease;
+            }
+
+            .message-node:hover {
+                border-color: var(--primary);
+                transform: translateY(-1px);
+            }
+
+            .message-node.selected {
+                border-color: var(--primary);
+                background: var(--primary-soft);
+            }
+
+            .toggle {
+                width: 24px;
+                height: 24px;
+                border-radius: 6px;
+                border: 1px solid #cbd5e1;
+                background: #f8fafc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 13px;
+                color: var(--muted);
+                cursor: pointer;
+            }
+
+            .toggle.empty {
+                visibility: hidden;
+            }
+
+            .message-main {
+                min-width: 0;
+            }
+
+            .message-title {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex-wrap: wrap;
+                font-weight: bold;
+                margin-bottom: 4px;
+            }
+
+            .message-meta {
+                font-size: 13px;
+                color: var(--muted);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                height: 22px;
+                padding: 0 8px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: bold;
+                background: #e5e7eb;
+                color: #374151;
+            }
+
+            .badge.interface-id {
+                background: #f2910c;
+                color: #082e88;
+            }
+
+            .badge.interface-1 {
+                background: #287ed8;
+                color: #ecfcf7;
+            }
+
+            .badge.interface-2 {
+                background: #dcfce7;
+                color: #15803d;
+            }
+
+            .badge.interface-3 {
+                background: #ffedd5;
+                color: #c2410c;
+            }
+
+            .badge.error {
+                background: #fee2e2;
+                color: #b91c1c;
+            }
+
+            .actions {
+                display: flex;
+                gap: 6px;
+            }
+
+            .icon-button {
+                border: 1px solid #d1d5db;
+                background: white;
+                border-radius: 8px;
+                height: 30px;
+                padding: 0 9px;
+                cursor: pointer;
+                color: var(--muted);
+            }
+
+            .details-grid {
+                display: grid;
+                grid-template-columns: 140px 1fr;
+                gap: 10px 14px;
+                font-size: 14px;
+            }
+
+            .details-grid .label {
+                color: var(--muted);
+                font-weight: bold;
+            }
+
+            .payload {
+                margin-top: 16px;
+                background: #0f172a;
+                color: #e5e7eb;
+                border-radius: 10px;
+                padding: 14px;
+                font-family: Consolas, Monaco, monospace;
+                font-size: 13px;
+                overflow: auto;
+                line-height: 1.45;
+            }
+
+            @media (max-width: 900px) {
+                .layout {
+                    grid-template-columns: 1fr;
+                }
+
+                .header {
+                    flex-direction: column;
+                }
+            }
+
+            /* Tree details */
+
+            .details-tree-view {
+                width: max-content;
+                min-width: 780px;
+                padding: 4px 8px 24px 4px;
+                background: white;
+            }
+
+            .details-tree,
+            .details-tree ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .details-tree ul {
+                margin-left: 26px;
+                padding-left: 16px;
+                border-left: 2px solid var(--line);
+            }
+
+            .details-tree li {
+                position: relative;
+                margin: 0;
+                padding: 2px 0 2px 0;
+            }
+
+            .details-tree ul li::before {
+                content: "";
+                position: absolute;
+                top: 17px;
+                left: -16px;
+                width: 13px;
+                border-top: 2px dotted var(--line);
+            }
+
+            .details-row {
+                display: flex;
+                align-items: baseline;
+                min-height: 24px;
+                white-space: nowrap;
+            }
+
+            .details-toggle {
+                flex: 0 0 auto;
+                width: 16px;
+                height: 16px;
+                margin-right: 6px;
+                border: 1px solid #9ca3af;
+                border-radius: 2px;
+                background: linear-gradient(#fafafa, #dcdcdc);
+                color: #555;
+                font-size: 15px;
+                line-height: 13px;
+                text-align: center;
+                font-family: Arial, sans-serif;
+                font-weight: bold;
+                box-shadow: inset 0 0 0 1px #f3f3f3;
+            }
+
+            .details-toggle.empty {
+                visibility: hidden;
+            }
+
+            .label {
+                font-weight: 700;
+                color: var(--brown);
+            }
+
+            .section-title {
+                color: var(--brown);
+                font-weight: 700;
+            }
+
+            .message-title {
+                color: var(--brown);
+                font-weight: 400;
+            }
+
+            .field-name {
+                color: var(--blue);
+                font-weight: 200;
+            }
+
+            .field-value {
+                color: var(--brown);
+                font-weight: 200;
+            }
+
+            .field-note {
+                color: var(--purple);
+                font-weight: 100;
+            }
+
+            .field-ok {
+                color: var(--green);
+                font-weight: 100;
+            }
+
+            .separator {
+                color: var(--muted);
+                padding: 0 12px;
+            }
+
+            .indent-spacer {
+                display: inline-block;
+                width: 22px;
+            }
+
+            .root-line {
+                font-size: 20px;
+            }
+
+            .small {
+                font-size: 17px;
+            }
+
+            /** footer */
+            .footer {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                background: var(--panel);
+                border: 1px solid #e5e7eb;
+                border-radius: var(--radius);
+                padding: 14px;
+                margin-bottom: 20px;
+                margin-top: 20px;
+                box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+            }
+
+            .footer-text {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                color: gray;
+                font-style: italic;
+            }
+        </style>
+    </head>
+    <body>
+        <main class="page">
+            <header class="header">
+                <div>
+                    <h1>Filtri di ricerca</h1>
+                </div>
+            </header>
+
+            <section class="toolbar">
+                <div class="filter">
+                    <label for="parentInterface">ID interfaccia</label>
+                    <input
+                        id="parentInterface"
+                        type="text"
+                        value="EVC-MT APP, EVC_JRU"
+                    />
+                    <select id="status">
+                        <option>Seleziona un ID</option>
+                    </select>
+                </div>
+
+                <div class="filter">
+                    <label for="childInterface">ID interfaccia annidato</label>
+                    <input id="childInterface" type="text" value="QLOG_RAW" />
+                    <select id="status">
+                        <option>Seleziona un ID</option>
+                        <option>OK</option>
+                        <option>Errore</option>
+                        <option>Warning</option>
+                    </select>
+                </div>
+
+                <div class="filter">
+                    <label for="sender">Mittente</label>
+                    <input id="sender" type="text" value="CPU_A, CPU_B" />
+                    <select id="sender-select">
+                        <option>Seleziona un mittente</option>
+                        <option>CPU_A</option>
+                        <option>CPU_B</option>
+                        <option>BTM_A</option>
+                        <option>BTM_B</option>
+                    </select>
+                </div>
+
+                <div class="filter">
+                    <label for="dateFrom">Da</label>
+                    <input id="dateFrom" type="datetime-local" />
+                </div>
+
+                <div class="filter">
+                    <label for="dateFrom">A</label>
+                    <input id="dateFrom" type="datetime-local" />
+                </div>
+
+                <div class="search-button">
+                    <button class="button">Cerca</button>
+                </div>
+            </section>
+
+            <section class="layout">
+                <div class="card" id="messages-tree">
+                    <ul class="tree">
+                        <li>
+                            <div class="message-node selected">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:07,925
+                                        <span class="badge interface-1"
+                                            >CPU_A</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_MT APP</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        Messaggi applicativi Subset-026
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:07,958
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_MT APP</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        Messaggi applicativi Subset-026
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,012
+                                        <span class="badge interface-1"
+                                            >CPU_A</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+
+                                        <span class="badge interface-id"
+                                            >QLOG_RAW</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">−</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,191
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+
+                                        <span class="badge interface-id"
+                                            >QLOG_RAW</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                                <!--<div class="actions">
+                                    <button class="icon-button">Apri</button>
+                                    <button class="icon-button">JSON</button>
+                                </div>-->
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="message-node">
+                                        <button class="toggle">+</button>
+                                        <div class="message-main">
+                                            <div class="message-title">
+                                                13:01:08,191
+                                                <span class="badge interface-1"
+                                                    >CPU_B</span
+                                                >
+                                                <span class="badge interface-2"
+                                                    >QLOG_RAW</span
+                                                >
+                                            </div>
+                                            <div class="message-meta">
+                                                RAW data
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,280
+                                        <span class="badge interface-1"
+                                            >CPU_A</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,292
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,315
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,327
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,402
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="message-node">
+                                <button class="toggle">+</button>
+                                <div class="message-main">
+                                    <div class="message-title">
+                                        13:01:08,434
+                                        <span class="badge interface-1"
+                                            >CPU_B</span
+                                        >
+                                        <span class="badge interface-id"
+                                            >EVC_JRU</span
+                                        >
+                                    </div>
+                                    <div class="message-meta">
+                                        JRU Subset-027
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <aside class="card" id="message-details">
+                    <div class="card-title">
+                        <h2>Dettaglio messaggio</h2>
+                        <span class="counter">#12530014</span>
+                    </div>
+
+                    <div class="details-grid">
+                        <div class="label">ID_INTERFACCIA</div>
+                        <div>EVC_MT APP (1)</div>
+
+                        <div class="label">Mittente</div>
+                        <div>CPU A</div>
+
+                        <div class="label">Ricevuto il</div>
+                        <div>2026-05-19 13:01:07,926</div>
+                    </div>
+
+                    <div class="details-tree-view">
+                        <ul class="details-tree">
+                            <li>
+                                <div class="details-row">
+                                    <span class="details-toggle">−</span>
+                                    <span class="section-title"
+                                        >Header JRU</span
+                                    >
+                                </div>
+
+                                <ul>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NID_MESSAGE</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >0x09</span
+                                            >&nbsp;&nbsp;<span
+                                                class="field-note"
+                                                >(Message From RBC)</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >L_MESSAGE</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">52</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name">Date</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >2026/05/11</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span
+                                                class="field-name"
+                                                title="Orario del messaggio"
+                                                >Time</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >12:05:52.800</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >Q_SCALE</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NID_C</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >290</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NID_BG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >423</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >Q_DIRLBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">1</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >Q_DLRBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">1</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >D_LRBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >8083</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >L_DOUBTOVER</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >464</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >L_DOUBTUNDER</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >464</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >TrainpositionVsLRBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >TrainpositionVsLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >QScaleLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NidCLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NidBgLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >QDirLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >QDLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >DLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >doubtOverLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >doubtUnderLUBG</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >V_TRAIN</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">67</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >Driver_ID</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >3423</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >NID_ENGINE</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value"
+                                                >34085</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >M_LEVEL</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">3</span
+                                            >&nbsp;&nbsp;<span
+                                                class="field-note"
+                                                >(Level 2)</span
+                                            >
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >M_VERSION</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">33</span>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            ><span class="field-name"
+                                                >M_MODE</span
+                                            ><span class="separator">:</span
+                                            ><span class="field-value">0</span
+                                            >&nbsp;&nbsp;<span
+                                                class="field-note"
+                                                >(FS - Full Supervision)</span
+                                            >
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <div class="details-row">
+                                    <span class="details-toggle">−</span>
+                                    <span class="section-title"
+                                        >Dati specifici&nbsp;&nbsp;[Message From
+                                        RBC]</span
+                                    >
+                                </div>
+
+                                <ul>
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            >
+                                            <span class="field-name"
+                                                >VAR_LENGTH</span
+                                            >
+                                            <span class="separator">:</span>
+                                            <span class="field-value">10</span>
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle empty"
+                                                >−</span
+                                            >
+                                            <span class="field-name"
+                                                >Q_ACK</span
+                                            >
+                                            <span class="separator">:</span>
+                                            <span class="field-value"
+                                                >1 (true)</span
+                                            >
+                                        </div>
+                                    </li>
+
+                                    <!--<li>
+                                        <div class="details-row small">
+                                            <span class="details-toggle">−</span>
+                                            <span class="field-name"
+                                                >Nested packet</span
+                                            >
+                                            <span class="separator">:</span>
+                                            <span class="field-note"
+                                                >Packet 15 - Movement
+                                                Authority</span
+                                            >
+                                        </div>
+
+                                        <ul>
+                                            <li>
+                                                <div class="details-row small">
+                                                    <span class="details-toggle empty"
+                                                        >−</span
+                                                    ><span class="field-name"
+                                                        >NID_PACKET</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span class="field-value"
+                                                        >15</span
+                                                    >
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="details-row small">
+                                                    <span class="details-toggle empty"
+                                                        >−</span
+                                                    ><span class="field-name"
+                                                        >Q_DIR</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span class="field-value"
+                                                        >1</span
+                                                    >
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="details-row small">
+                                                    <span class="details-toggle empty"
+                                                        >−</span
+                                                    ><span class="field-name"
+                                                        >L_PACKET</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span class="field-value"
+                                                        >71</span
+                                                    >
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>-->
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="footer">
+                <div class="footer-text">
+                    <span
+                        >dati caricati il 18/05/2026 alle 10.01 - Caricamento in
+                        corso, completato 38%</span
+                    >
+                </div>
+            </section>
+        </main>
+    </body>
+</html>
