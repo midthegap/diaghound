@@ -106,6 +106,12 @@
                 cursor: pointer;
             }
 
+            .button.btn-large {
+                height: 40px;
+                padding: 0 20px;
+                font-size: 1.1em;
+            }
+
             .layout {
                 display: grid;
                 grid-template-columns: minmax(33.3333vw, 0.8fr) 1.2fr;
@@ -470,34 +476,101 @@
                 color: gray;
                 font-style: italic;
             }
+
+            /* tooltip */
+            /* 1. Prepara il contenitore del tooltip */
+            .field-name {
+                position: relative;
+                cursor: help;
+                border-bottom: 1px dotted #666; /* Linea tratteggiata opzionale */
+            }
+
+            /* 2. Crea e stilizza il fumetto del tooltip */
+            .field-name::after {
+                content: attr(
+                    data-title
+                ); /* Legge il testo dal data-attribute */
+                position: absolute;
+                bottom: 125%; /* Lo posiziona sopra il testo */
+                left: 50%;
+                transform: translateX(-50%);
+
+                /* Stile del Tooltip (Modificalo come vuoi) */
+                background-color: #333;
+                color: #fff;
+                padding: 6px 10px;
+                border-radius: 4px;
+                font-size: 16px;
+                white-space: nowrap;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+                /* Nascondi di default */
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.2s ease-in-out;
+            }
+
+            /* 3. Mostra il tooltip al passaggio del mouse (Hover) */
+            .field-name:hover::after {
+                opacity: 1;
+            }
+
+            /* spinner */
+            /* Allinea testo e spinner sulla stessa riga */
+            .loading-text-container {
+                display: inline;
+                font-family: sans-serif;
+                font-size: 16px;
+            }
+
+            /* Spinner ridimensionato per adattarsi all'altezza del testo */
+            .snake-spinner-inline {
+                width: 16px; /* Stessa dimensione del font-size per proporzione */
+                height: 16px;
+                border: 2px solid #3498db;
+                border-top-color: transparent;
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+                display: inline-block;
+            }
+
+            /* Animazione di rotazione */
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
         </style>
     </head>
     <body>
         <main class="page">
             <header class="header">
                 <div>
-                    <h1>Filtri di ricerca</h1>
+                    <h1>Search filters</h1>
                 </div>
             </header>
 
             <section class="toolbar">
                 <div class="filter">
-                    <label for="parentInterface">ID interfaccia</label>
+                    <label for="parentInterface">INTERFACE ID</label>
                     <input
                         id="parentInterface"
                         type="text"
                         value="EVC-MT APP, EVC_JRU"
                     />
                     <select id="status">
-                        <option>Seleziona un ID</option>
+                        <option>Select an ID</option>
                     </select>
                 </div>
 
                 <div class="filter">
-                    <label for="childInterface">ID interfaccia annidato</label>
+                    <label for="childInterface">NESTED INTERFACE ID</label>
                     <input id="childInterface" type="text" value="QLOG_RAW" />
                     <select id="status">
-                        <option>Seleziona un ID</option>
+                        <option>Select an ID</option>
                         <option>OK</option>
                         <option>Errore</option>
                         <option>Warning</option>
@@ -505,10 +578,10 @@
                 </div>
 
                 <div class="filter">
-                    <label for="sender">Mittente</label>
+                    <label for="sender">SENDER</label>
                     <input id="sender" type="text" value="CPU_A, CPU_B" />
                     <select id="sender-select">
-                        <option>Seleziona un mittente</option>
+                        <option>Select a sender</option>
                         <option>CPU_A</option>
                         <option>CPU_B</option>
                         <option>BTM_A</option>
@@ -517,17 +590,17 @@
                 </div>
 
                 <div class="filter">
-                    <label for="dateFrom">Da</label>
+                    <label for="dateFrom">FROM</label>
                     <input id="dateFrom" type="datetime-local" />
                 </div>
 
                 <div class="filter">
-                    <label for="dateFrom">A</label>
-                    <input id="dateFrom" type="datetime-local" />
+                    <label for="dateTo">TO</label>
+                    <input id="dateTo" type="datetime-local" />
                 </div>
 
                 <div class="search-button">
-                    <button class="button">Cerca</button>
+                    <button class="button btn-large">Search</button>
                 </div>
             </section>
 
@@ -772,18 +845,18 @@
 
                 <aside class="card" id="message-details">
                     <div class="card-title">
-                        <h2>Dettaglio messaggio</h2>
+                        <h2>Message</h2>
                         <span class="counter">#12530014</span>
                     </div>
 
                     <div class="details-grid">
-                        <div class="label">ID_INTERFACCIA</div>
+                        <div class="label">INTERFACE ID</div>
                         <div>EVC_MT APP (1)</div>
 
-                        <div class="label">Mittente</div>
-                        <div>CPU A</div>
+                        <div class="label">Sender ID</div>
+                        <div>2 (CPU A)</div>
 
-                        <div class="label">Ricevuto il</div>
+                        <div class="label">Received on</div>
                         <div>2026-05-19 13:01:07,926</div>
                     </div>
 
@@ -802,14 +875,16 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
+                                            ><span
+                                                class="field-name"
+                                                data-title="Message identification number"
                                                 >NID_MESSAGE</span
                                             ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >0x09</span
+                                            ><span class="field-value">3</span
                                             >&nbsp;&nbsp;<span
                                                 class="field-note"
-                                                >(Message From RBC)</span
+                                                >(EMERGENCY BRAKE COMMAND
+                                                STATE)</span
                                             >
                                         </div>
                                     </li>
@@ -817,7 +892,9 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
+                                            ><span
+                                                class="field-name"
+                                                data-title="Message length"
                                                 >L_MESSAGE</span
                                             ><span class="separator">:</span
                                             ><span class="field-value">52</span>
@@ -827,7 +904,10 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name">Date</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Current date"
+                                                >DATE</span
                                             ><span class="separator">:</span
                                             ><span class="field-value"
                                                 >2026/05/11</span
@@ -840,8 +920,8 @@
                                                 >−</span
                                             ><span
                                                 class="field-name"
-                                                title="Orario del messaggio"
-                                                >Time</span
+                                                data-title="Current time"
+                                                >TIME</span
                                             ><span class="separator">:</span
                                             ><span class="field-value"
                                                 >12:05:52.800</span
@@ -850,23 +930,189 @@
                                     </li>
                                     <li>
                                         <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >Q_SCALE</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
+                                            <span class="details-toggle">−</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Current train position"
+                                                >TRAIN_POSITION</span
+                                            >
+                                        </div>
+
+                                        <div class="details-row small">
+                                            <ul>
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="Qualifier for the distance scale"
+                                                            >Q_SCALE</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >2</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(1 m scale)</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="Identity of last relevant balise group"
+                                                            >NID_LRBG</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >3456</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="Distance between the last relevant balise group and the estimated front end of the train (the side of the
+                                                            active cab)"
+                                                            >D_LRBG</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >7</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(7 meters)</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="Orientation of the train in relation to the direction of the LRBG"
+                                                            >Q_DIRLRBG</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >1</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(Nominal)</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="Qualifier telling on which side of the LRBG the estimated front end is"
+                                                            >Q_DLRBG</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >1</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(Nominal)</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="L_DOUBTOVER is the over-reading amount plus the Q_LOCACC of the LRBG"
+                                                            >L_DOUBTOVER</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >3</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(3 meters)</span
+                                                        >
+                                                    </div>
+                                                </li>
+
+                                                <li>
+                                                    <div
+                                                        class="details-row small"
+                                                    >
+                                                        <span
+                                                            class="details-toggle empty"
+                                                            >−</span
+                                                        ><span
+                                                            class="field-name"
+                                                            data-title="L_DOUBTUNDER is the under-reading amount plus the Q_LOCACC of the LRBG"
+                                                            >L_DOUBTUNDER</span
+                                                        ><span class="separator"
+                                                            >:</span
+                                                        ><span
+                                                            class="field-value"
+                                                            >2</span
+                                                        >&nbsp;&nbsp;<span
+                                                            class="field-note"
+                                                            >(2 meters)</span
+                                                        >
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >NID_C</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Current train speed"
+                                                >V_TRAIN</span
                                             ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >290</span
+                                            ><span class="field-value">94</span
+                                            >&nbsp;<span class="field-value"
+                                                >Km/h</span
                                             >
                                         </div>
                                     </li>
@@ -874,8 +1120,10 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >NID_BG</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Driver identifier"
+                                                >DRIVER_ID</span
                                             ><span class="separator">:</span
                                             ><span class="field-value"
                                                 >423</span
@@ -886,8 +1134,10 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >Q_DIRLBG</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="On-board ETCS identity"
+                                                >NID ENGINE</span
                                             ><span class="separator">:</span
                                             ><span class="field-value">1</span>
                                         </div>
@@ -896,8 +1146,10 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >Q_DLRBG</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Currently operated system version"
+                                                >SYSTEM VERSION</span
                                             ><span class="separator">:</span
                                             ><span class="field-value">1</span>
                                         </div>
@@ -906,183 +1158,15 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >D_LRBG</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Current level"
+                                                >LEVEL</span
                                             ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >8083</span
-                                            >
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >L_DOUBTOVER</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >464</span
-                                            >
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >L_DOUBTUNDER</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >464</span
-                                            >
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >TrainpositionVsLRBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >TrainpositionVsLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >QScaleLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >NidCLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >NidBgLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >QDirLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >QDLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >DLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >doubtOverLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >doubtUnderLUBG</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">0</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >V_TRAIN</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">67</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >Driver_ID</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >3423</span
-                                            >
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >NID_ENGINE</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value"
-                                                >34085</span
-                                            >
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >M_LEVEL</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">3</span
+                                            ><span class="field-value">2</span
                                             >&nbsp;&nbsp;<span
                                                 class="field-note"
-                                                >(Level 2)</span
+                                                >(Level 1)</span
                                             >
                                         </div>
                                     </li>
@@ -1090,18 +1174,10 @@
                                         <div class="details-row small">
                                             <span class="details-toggle empty"
                                                 >−</span
-                                            ><span class="field-name"
-                                                >M_VERSION</span
-                                            ><span class="separator">:</span
-                                            ><span class="field-value">33</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            ><span class="field-name"
-                                                >M_MODE</span
+                                            ><span
+                                                class="field-name"
+                                                data-title="Current mode"
+                                                >MODE</span
                                             ><span class="separator">:</span
                                             ><span class="field-value">0</span
                                             >&nbsp;&nbsp;<span
@@ -1117,8 +1193,9 @@
                                 <div class="details-row">
                                     <span class="details-toggle">−</span>
                                     <span class="section-title"
-                                        >Dati specifici&nbsp;&nbsp;[Message From
-                                        RBC]</span
+                                        >Complementary
+                                        variables&nbsp;&nbsp;[EMERGENCY BRAKE
+                                        COMMAND STATE]</span
                                     >
                                 </div>
 
@@ -1129,24 +1206,12 @@
                                                 >−</span
                                             >
                                             <span class="field-name"
-                                                >VAR_LENGTH</span
+                                                >M_BRAKE_COMMAND_STATE</span
                                             >
                                             <span class="separator">:</span>
-                                            <span class="field-value">10</span>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="details-row small">
-                                            <span class="details-toggle empty"
-                                                >−</span
-                                            >
-                                            <span class="field-name"
-                                                >Q_ACK</span
-                                            >
-                                            <span class="separator">:</span>
-                                            <span class="field-value"
-                                                >1 (true)</span
+                                            <span class="field-value">0</span>
+                                            &nbsp;&nbsp;<span class="field-note"
+                                                >(Not commanded)</span
                                             >
                                         </div>
                                     </li>
@@ -1214,11 +1279,12 @@
             </section>
 
             <section class="footer">
-                <div class="footer-text">
+                <div class="footer-text loading-text-container">
                     <span
                         >dati caricati il 18/05/2026 alle 10.01 - Caricamento in
-                        corso, completato 38%</span
+                        corso, completato 38%&nbsp;</span
                     >
+                    <div class="snake-spinner-inline"></div>
                 </div>
             </section>
         </main>
