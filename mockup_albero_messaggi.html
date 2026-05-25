@@ -625,7 +625,7 @@
                 <div class="card" id="messages-tree">
                     <ul class="tree">
                         <li>
-                            <div class="message-node selected">
+                            <div class="message-node">
                                 <button class="toggle">+</button>
                                 <div class="message-main">
                                     <div class="message-title">
@@ -687,18 +687,19 @@
                                         >
 
                                         <span class="badge interface-id"
-                                            >QLOG_RAW</span
+                                            >EB COMMAND STATE</span
                                         >
                                     </div>
                                     <div class="message-meta">
-                                        JRU Subset-027
+                                        JRU Subset-027 / Emergency Brake Command
+                                        State
                                     </div>
                                 </div>
                             </div>
                         </li>
 
                         <li>
-                            <div class="message-node">
+                            <div class="message-node selected">
                                 <button class="toggle">−</button>
                                 <div class="message-main">
                                     <div class="message-title">
@@ -714,11 +715,12 @@
                                         >
 
                                         <span class="badge interface-id"
-                                            >QLOG_RAW</span
+                                            >EB COMMAND STATE</span
                                         >
                                     </div>
                                     <div class="message-meta">
-                                        JRU Subset-027
+                                        JRU Subset-027 / Emergency Brake Command
+                                        State
                                     </div>
                                 </div>
                                 <!--<div class="actions">
@@ -734,18 +736,12 @@
                                         <div class="message-main">
                                             <div class="message-title">
                                                 13:01:08,191
-                                                <span class="badge interface-1"
-                                                    >CPU_B</span
-                                                >
-                                                <span class="badge direction"
-                                                    >Registration</span
-                                                >
-                                                <span class="badge interface-2"
-                                                    >QLOG_RAW</span
+                                                <span class="badge interface-id"
+                                                    >EB COMMAND STATE</span
                                                 >
                                             </div>
                                             <div class="message-meta">
-                                                RAW data
+                                                Emergency Brake Command State
                                             </div>
                                         </div>
                                     </div>
@@ -1255,7 +1251,9 @@
                                             <span class="details-toggle empty"
                                                 >−</span
                                             >
-                                            <span class="field-name"
+                                            <span
+                                                class="field-name"
+                                                data-title="Brake command state"
                                                 >M_BRAKE_COMMAND_STATE</span
                                             >
                                             <span class="separator">:</span>
