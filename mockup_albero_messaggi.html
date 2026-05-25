@@ -268,6 +268,16 @@
                 color: #082e88;
             }
 
+            .badge.direction-indication {
+                background: #264ebb;
+                color: #dddddd;
+            }
+
+            .badge.direction {
+                background: #dddddd;
+                color: #264ebb;
+            }
+
             .badge.interface-1 {
                 background: #287ed8;
                 color: #ecfcf7;
@@ -590,12 +600,19 @@
                 </div>
 
                 <div class="filter">
-                    <label for="dateFrom">FROM</label>
-                    <input id="dateFrom" type="datetime-local" />
+                    <label for="sender">DIRECTION</label>
+                    <input id="sender" type="text" value="Both" />
+                    <select id="sender-select">
+                        <option>Select a direction</option>
+                        <option>Both</option>
+                        <option>Indication</option>
+                        <option>Registration</option>
+                    </select>
                 </div>
 
                 <div class="filter">
-                    <label for="dateTo">TO</label>
+                    <label for="dateFrom">TIME FROM - TO</label>
+                    <input id="dateFrom" type="datetime-local" />
                     <input id="dateTo" type="datetime-local" />
                 </div>
 
@@ -615,6 +632,9 @@
                                         13:01:07,925
                                         <span class="badge interface-1"
                                             >CPU_A</span
+                                        >
+                                        <span class="badge direction-indication"
+                                            >Indication</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_MT APP</span
@@ -636,6 +656,9 @@
                                         <span class="badge interface-1"
                                             >CPU_B</span
                                         >
+                                        <span class="badge direction-indication"
+                                            >Indication</span
+                                        >
                                         <span class="badge interface-id"
                                             >EVC_MT APP</span
                                         >
@@ -655,6 +678,9 @@
                                         13:01:08,012
                                         <span class="badge interface-1"
                                             >CPU_A</span
+                                        >
+                                        <span class="badge direction"
+                                            >Registration</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
@@ -679,6 +705,9 @@
                                         13:01:08,191
                                         <span class="badge interface-1"
                                             >CPU_B</span
+                                        >
+                                        <span class="badge direction"
+                                            >Registration</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
@@ -708,6 +737,9 @@
                                                 <span class="badge interface-1"
                                                     >CPU_B</span
                                                 >
+                                                <span class="badge direction"
+                                                    >Registration</span
+                                                >
                                                 <span class="badge interface-2"
                                                     >QLOG_RAW</span
                                                 >
@@ -730,6 +762,9 @@
                                         <span class="badge interface-1"
                                             >CPU_A</span
                                         >
+                                        <span class="badge direction"
+                                            >Registration</span
+                                        >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
                                         >
@@ -749,6 +784,9 @@
                                         13:01:08,292
                                         <span class="badge interface-1"
                                             >CPU_B</span
+                                        >
+                                        <span class="badge direction"
+                                            >Registration</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
@@ -770,6 +808,9 @@
                                         <span class="badge interface-1"
                                             >CPU_B</span
                                         >
+                                        <span class="badge direction"
+                                            >Registration</span
+                                        >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
                                         >
@@ -789,6 +830,9 @@
                                         13:01:08,327
                                         <span class="badge interface-1"
                                             >CPU_B</span
+                                        >
+                                        <span class="badge direction"
+                                            >Registration</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
@@ -810,6 +854,9 @@
                                         <span class="badge interface-1"
                                             >CPU_B</span
                                         >
+                                        <span class="badge direction"
+                                            >Registration</span
+                                        >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
                                         >
@@ -829,6 +876,9 @@
                                         13:01:08,434
                                         <span class="badge interface-1"
                                             >CPU_B</span
+                                        >
+                                        <span class="badge direction"
+                                            >Registration</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
