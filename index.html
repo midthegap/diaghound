@@ -749,7 +749,7 @@
                         </li>
 
                         <li>
-                            <div class="message-node">
+                            <div class="message-node" id="local-diag-message">
                                 <button class="toggle">+</button>
                                 <div class="message-main">
                                     <div class="message-title">
@@ -761,7 +761,7 @@
                                             >Registration</span
                                         >
                                         <span class="badge interface-id"
-                                            >LOCAL_DIAG</span
+                                            >STB_LOC_DIAG</span
                                         >
                                         <span class="badge interface-id"
                                             >EVC_JRU</span
@@ -771,7 +771,7 @@
                                         >
                                     </div>
                                     <div class="message-meta">
-                                        Local Diagnostic / JRU Subset-027 /
+                                        STB Local Diagnostic / JRU Subset-027 /
                                         Emergency Brake Command State
                                     </div>
                                 </div>
@@ -780,7 +780,10 @@
 
                         <ul>
                             <li>
-                                <div class="message-node">
+                                <div
+                                    class="message-node"
+                                    id="jru-eb-command-message"
+                                >
                                     <button class="toggle">+</button>
                                     <div class="message-main">
                                         <div class="message-title">
@@ -801,7 +804,10 @@
 
                             <ul>
                                 <li>
-                                    <div class="message-node">
+                                    <div
+                                        class="message-node"
+                                        id="eb-command-message"
+                                    >
                                         <button class="toggle">+</button>
                                         <div class="message-main">
                                             <div class="message-title">
@@ -945,8 +951,8 @@
                         <div class="label">INTERFACE ID</div>
                         <div>EVC_MT APP (1)</div>
 
-                        <div class="label">Sender ID</div>
-                        <div>2 (CPU A)</div>
+                        <div class="label">Sender</div>
+                        <div>2 (CPU B)</div>
 
                         <div class="label">Received on</div>
                         <div>2026-05-19 13:01:07,926</div>
@@ -1231,7 +1237,9 @@
                                                 data-title="On-board ETCS identity"
                                                 >NID ENGINE</span
                                             ><span class="separator">:</span
-                                            ><span class="field-value">1</span>
+                                            ><span class="field-value"
+                                                >313</span
+                                            >
                                         </div>
                                     </li>
                                     <li>
@@ -1243,7 +1251,7 @@
                                                 data-title="Currently operated system version"
                                                 >SYSTEM VERSION</span
                                             ><span class="separator">:</span
-                                            ><span class="field-value">1</span>
+                                            ><span class="field-value">6</span>
                                         </div>
                                     </li>
                                     <li>
@@ -1382,5 +1390,551 @@
                 </div>
             </section>
         </main>
+
+        <script>
+            (function () {
+                const details = document.getElementById("message-details");
+                if (!details) return;
+
+                const originalContent = details.innerHTML;
+
+                const localDiagContent = `
+                <div class="card-title">
+                    <h2>Message</h2>
+                    <span class="counter">#12530014</span>
+                </div>
+
+                <div class="details-grid">
+                    <div class="label">INTERFACE ID</div>
+                    <div>STB_LOCAL_DIAG (0xFE)</div>
+
+                    <div class="label">Sender</div>
+                    <div>1 (CPU A)</div>
+
+                    <div class="label">Received on</div>
+                    <div>2026-05-19 13:01:08,280</div>
+                </div>
+
+                <div class="details-tree-view">
+                    <ul class="details-tree">
+                        <li>
+                            <div class="details-row">
+                                <span class="details-toggle">−</span>
+                                <span class="section-title"
+                                    >Header STB Local Diagnostic</span
+                                >
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Message identification number"
+                                            >NID_MESSAGE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">254 (0xFE)</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Traveled space in meters"
+                                            >SPACE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">13560 meters</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Timestamp (milliseconds)"
+                                            >TIME</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >2026/05/27 15:23:32 (1779895412 milliseconds)</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Diagnostic message payload in hexadecimal"
+                                            >Payload</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >FA D8 3D 1B 81 16 F8 70 D2 7B BE F8 28 9F D6 F1 E5</span
+                                        >
+                                    </div>
+                                </li>
+                `;
+
+                const jruEbCommandContent = `
+                <div class="card-title">
+                    <h2>Message</h2>
+                    <span class="counter">#12530014</span>
+                </div>
+
+                <div class="details-grid">
+                    <div class="label">INTERFACE ID</div>
+                    <div>EVC_JRU (7)</div>
+
+                    <div class="label">Sender</div>
+                    <div>1 (CPU A)</div>
+
+                    <div class="label">Received on</div>
+                    <div>2026-05-19 13:01:08,280</div>
+                </div>
+
+                <div class="details-tree-view">
+                    <ul class="details-tree">
+                        <li>
+                            <div class="details-row">
+                                <span class="details-toggle">−</span>
+                                <span class="section-title"
+                                    >Header JRU</span
+                                >
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Message identification number"
+                                            >NID_MESSAGE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">3</span
+                                        >&nbsp;&nbsp;<span
+                                            class="field-note"
+                                            >(EMERGENCY BRAKE COMMAND
+                                            STATE)</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Message length"
+                                            >L_MESSAGE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">52</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current date"
+                                            >DATE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >2026/05/11</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current time"
+                                            >TIME</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >12:05:52.800</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle">−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current train position"
+                                            >TRAIN_POSITION</span
+                                        >
+                                    </div>
+
+                                    <div class="details-row small">
+                                        <ul>
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="Qualifier for the distance scale"
+                                                        >Q_SCALE</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >2</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(1 m scale)</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="Identity of last relevant balise group"
+                                                        >NID_LRBG</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >3456</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="Distance between the last relevant balise group and the estimated front end of the train (the side of the
+                                                        active cab)"
+                                                        >D_LRBG</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >7</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(7 meters)</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="Orientation of the train in relation to the direction of the LRBG"
+                                                        >Q_DIRLRBG</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >1</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(Nominal)</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="Qualifier telling on which side of the LRBG the estimated front end is"
+                                                        >Q_DLRBG</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >1</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(Nominal)</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="L_DOUBTOVER is the over-reading amount plus the Q_LOCACC of the LRBG"
+                                                        >L_DOUBTOVER</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >3</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(3 meters)</span
+                                                    >
+                                                </div>
+                                            </li>
+
+                                            <li>
+                                                <div
+                                                    class="details-row small"
+                                                >
+                                                    <span
+                                                        class="details-toggle empty"
+                                                        >−</span
+                                                    ><span
+                                                        class="field-name"
+                                                        data-title="L_DOUBTUNDER is the under-reading amount plus the Q_LOCACC of the LRBG"
+                                                        >L_DOUBTUNDER</span
+                                                    ><span class="separator"
+                                                        >:</span
+                                                    ><span
+                                                        class="field-value"
+                                                        >2</span
+                                                    >&nbsp;&nbsp;<span
+                                                        class="field-note"
+                                                        >(2 meters)</span
+                                                    >
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current train speed"
+                                            >V_TRAIN</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">94</span
+                                        >&nbsp;<span class="field-value"
+                                            >Km/h</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Driver identifier"
+                                            >DRIVER_ID</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >423</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="On-board ETCS identity"
+                                            >NID ENGINE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value"
+                                            >313</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Currently operated system version"
+                                            >SYSTEM VERSION</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">6</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current level"
+                                            >LEVEL</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">2</span
+                                        >&nbsp;&nbsp;<span
+                                            class="field-note"
+                                            >(Level 1)</span
+                                        >
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        ><span
+                                            class="field-name"
+                                            data-title="Current mode"
+                                            >MODE</span
+                                        ><span class="separator">:</span
+                                        ><span class="field-value">0</span
+                                        >&nbsp;&nbsp;<span
+                                            class="field-note"
+                                            >(FS - Full Supervision)</span
+                                        >
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <div class="details-row">
+                                <span class="details-toggle">−</span>
+                                <span class="section-title"
+                                    >Complementary
+                                    variables</span
+                                >
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        >
+                                        <span
+                                            class="field-name"
+                                            data-title="Variables data in hexadecimal"
+                                            >Data</span
+                                        >
+                                        <span class="separator">:</span>
+                                        <span class="field-value">00</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                `;
+
+                const ebCommandContent = `
+                    <div class="card-title">
+                        <h2>Message</h2>
+                        <span class="counter">#12530021</span>
+                    </div>
+
+                    <div class="details-grid">
+                      <div class="label">INTERFACE ID</div>
+                      <div>EMERGENCY BRAKE COMMAND STATE (3)</div>
+
+                      <div class="label">Sender</div>
+                      <div>1 (CPU A)</div>
+
+                      <div class="label">Received on</div>
+                      <div>2026-05-19 13:01:08,280</div>
+                    </div>
+
+                    <div class="details-tree-view">
+                        <ul class="details-tree">
+                        <li>
+                            <div class="details-row">
+                                <span class="details-toggle">−</span>
+                                <span class="section-title"
+                                    >JRU Payload</span
+                                >
+                            </div>
+
+                            <ul>
+                                <li>
+                                    <div class="details-row small">
+                                        <span class="details-toggle empty"
+                                            >−</span
+                                        >
+                                        <span
+                                            class="field-name"
+                                            data-title="Brake command state"
+                                            >M_BRAKE_COMMAND_STATE</span
+                                        >
+                                        <span class="separator">:</span>
+                                        <span class="field-value">0</span>
+                                        &nbsp;&nbsp;<span class="field-note"
+                                            >(Not commanded)</span
+                                        >
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        </ul>
+                    </div>
+                `;
+
+                document.querySelectorAll(".message-node").forEach((node) => {
+                    node.addEventListener("click", () => {
+                        if (node.classList.contains("selected")) {
+                            node.classList.remove("selected");
+                            details.innerHTML = originalContent;
+                            return;
+                        }
+
+                        document
+                            .querySelectorAll(".message-node.selected")
+                            .forEach((n) => n.classList.remove("selected"));
+                        node.classList.add("selected");
+
+                        if (node.id === "local-diag-message") {
+                            details.innerHTML = localDiagContent;
+                        } else if (node.id === "jru-eb-command-message") {
+                            details.innerHTML = jruEbCommandContent;
+                        } else if (node.id === "eb-command-message") {
+                            details.innerHTML = ebCommandContent;
+                        } else {
+                            details.innerHTML = originalContent;
+                        }
+                    });
+                });
+            })();
+        </script>
     </body>
 </html>
